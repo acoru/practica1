@@ -91,7 +91,11 @@ main()
 		
 		enviados=send(nuevosockfd,buffer_out,(int)strlen(buffer_out),0);
 		//TODO Comprobar error de envío
- 
+		if(enviados == SOCKET_ERROR)
+		{
+			//-7 value chosen for send error code
+			return(-7);
+		}
 		//Se reestablece el estado inicial
 		estado = S_USER;
 		fin_conexion = 0;
@@ -102,6 +106,11 @@ main()
 			//Se espera un comando del cliente
 			recibidos = recv(nuevosockfd,buffer_in,1023,0);
 			//TODO Comprobar posible error de recepción
+			if(recibidos == SOCKET_ERROR)
+			{
+				//-8 value chosen for recv(reception) error code
+				return(-8);
+			}
 			
 			buffer_in[recibidos] = 0x00;
 			printf ("SERVIDOR [bytes recibidos]> %d\r\nSERVIDOR [datos recibidos]>%s", recibidos, buffer_in);

@@ -10,3 +10,12 @@ server/server.sln
 server/server.v11.suo
 server/server.vcxproj
 server/server.vcxproj.filters
+*.user
+*.pdb
+*.exe
+*.tlog
+*.ilk
+*.lastbuildstate
+*.log
+*.obj
+*.idb

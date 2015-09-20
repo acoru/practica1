@@ -132,11 +132,22 @@ int main(int *argc, char *argv[])
 					}
 					//Envio
 					if(estado!=S_HELO)
+					{
 					// Ejercicio: Comprobar el estado de envio
 						enviados=send(sockfd,buffer_out,(int)strlen(buffer_out),0);
-
+						if(enviados == SOCKET_ERROR)
+						{
+							//-7 value chosen for send error code
+							return(-7);
+						}
+					}
 					//Recibo
 					recibidos=recv(sockfd,buffer_in,512,0);
+					if(recibidos == SOCKET_ERROR)
+					{
+						//-8 value chosen for recv(reception) error code
+						return(-8);
+					}
 
 					if(recibidos<=0)
 					{
