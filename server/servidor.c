@@ -208,6 +208,11 @@ main()
 
 			enviados=send(nuevosockfd,buffer_out,(int)strlen(buffer_out),0);
 			//TODO 
+			if(enviados == SOCKET_ERROR)
+			{
+				//if an error occurs sending data from the state machine, it will return as error code "-9"
+				return(-9);
+			}
 
 
 		} while (!fin_conexion);
