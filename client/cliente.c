@@ -32,6 +32,10 @@ int main(int *argc, char *argv[])
 	int recibidos=0,enviados=0;
 	int estado=S_HELO;
 	char option;
+	//new variables added for the SUM functionality
+	int num1 = 0, num2 = 0;
+	int num_error = 0;	//if user(client) insert a bad number(non 4-digit number), it will go 1
+							//and make the user enter in a loop until user(client) insert a 4-digit number
 
 	WORD wVersionRequested;
 	WSADATA wsaData;
@@ -124,6 +128,53 @@ int main(int *argc, char *argv[])
 							sprintf_s (buffer_out, sizeof(buffer_out), "%s%s",SD,CRLF);
 							estado=S_QUIT;
 						}
+						//NEW CODE ADDED from here for SUM functionality
+						else if(strcmp(input, SUM) == 0)
+						{
+							printf("CLIENTE> Please, insert the first number(4 digit or less): ");
+							num_error = 0;
+							do
+							{
+								if(num_error == 1)
+								{
+									printf("CLIENTE> Please, remember you must insert a 4 digit number: ");
+								}
+								scanf("%d", &num1);
+								while(getchar() != '\n');	//used for clearing the input buffer
+								if(num1 < 0 && num1 > 9999)
+								{
+									num_error = 1;
+								}
+								else
+								{
+									num_error = 0;
+								}
+							}while(num_error == 1);
+							printf("CLIENTE> Please, insert the second number(4 digit or less): ");
+							num_error = 0;
+							do
+							{
+								if(num_error == 1)
+								{
+									printf("CLIENTE> Please, remember you must insert a 4 digit number: ");
+								}
+								scanf("%d", &num2);
+								while(getchar() != '\n');	//used for clearing the input buffer
+								if(num2 < 0 && num2 > 9999)
+								{
+									num_error = 1;
+								}
+								else
+								{
+									num_error = 0;
+								}
+							}while(num_error == 1);
+							//creating the string with the following format: SUM SP NUM1 SP NUM2 CRLF
+							//it will be send to the server side and it will process it for returning
+							//OK SP SUMA CRLF	where SUMA is NUM1+NUM2(5-digit number)
+							sprintf_s(buffer_out, sizeof(buffer_out), "%s %d %d%s",SUM, num1, num2, CRLF);
+						//END OF NEW CODE
+						}
 						else
 							sprintf_s (buffer_out, sizeof(buffer_out), "%s%s",input,CRLF);
 						break;
@@ -139,16 +190,12 @@ int main(int *argc, char *argv[])
 						{
 							//-7 value chosen for send error code
 							return(-7);
+							printf("CLIENTE> FAIL SENDING DATA TO THE SERVER");
+							estado=S_QUIT;
 						}
 					}
 					//Recibo
 					recibidos=recv(sockfd,buffer_in,512,0);
-					if(recibidos == SOCKET_ERROR)
-					{
-						//-8 value chosen for recv(reception) error code
-						return(-8);
-					}
-
 					if(recibidos<=0)
 					{
 						DWORD error=GetLastError();

@@ -35,6 +35,15 @@ main()
 	int fin=0, fin_conexion=0;
 	int recibidos=0,enviados=0;
 	int estado=0;
+	//NEW VARIABLES FOR SUM FROM HERE
+	//cSum fSpace and sSpace will be use for comparing the correct format of the SUM functionality
+	char cSum[4] = "", fSpace[2] = "", sSpace[2] = "", cCRLF[3] = "";
+	//cNum1 and cNum2 same as the other chars written before, but this will be use for the numbers
+	char cNum1[5] = "", cNum2[5] = "";
+	//here is where the numbers will be saved before the SUM
+	int num1 = 0, num2 = 0;
+	int suma = 0;
+	//END OFF NEW VARIABLES
 
 	/** INICIALIZACION DE BIBLIOTECA WINSOCK2 **
 	 ** OJO!: SOLO WINDOWS                    **/
@@ -95,6 +104,8 @@ main()
 		{
 			//-7 value chosen for send error code
 			return(-7);
+			//provisional solution for error sending welcome message to the client, just close the socket
+			closesocket(nuevosockfd);
 		}
 		//Se reestablece el estado inicial
 		estado = S_USER;
@@ -110,6 +121,8 @@ main()
 			{
 				//-8 value chosen for recv(reception) error code
 				return(-8);
+				//provisional solution for reciving error from client, just close the socket
+				closesocket(nuevosockfd);
 			}
 			
 			buffer_in[recibidos] = 0x00;
@@ -195,6 +208,30 @@ main()
 						fin_conexion=1;
 						fin=1;
 					}
+					//NEW CODE ADDED from here for SUM
+					else if(strcmp(cmd, "SUM ") == 0)
+					{
+						//sscanf_s (buffer_in,"PASS %s\r\n",pas,sizeof(usr));
+						strncpy(cSum, buffer_in, 3);
+						strncpy(fSpace, buffer_in + 3, 1);
+						strncpy(sSpace, buffer_in + 8, 1);
+						strncpy(cNum1, buffer_in + 4, 4);
+						strncpy(cNum2, buffer_in + 9, 4);
+						strncpy(cCRLF, buffer_in + 13, 2);
+						sscanf_s(cNum1, "%d", &num1);
+						sscanf_s(cNum1, "%d", &num2);
+						if(strcmp(cSum, SUM) == 0 && strcmp(fSpace, " ") == 0 && strcmp(sSpace, " ") == 0 && strcmp(cCRLF, CRLF) == 0 && num1 > 0 && num1 < 9999 && num2 > 0 && num2 < 9999)
+						{
+							suma = num1 + num2;
+							printf("%d", suma);
+							sprintf_s(buffer_out, sizeof(buffer_out), "%s %d%s", OK, suma, CRLF);
+						}
+						else
+						{
+							sprintf_s(buffer_out, sizeof(buffer_out), "%s%s", ER, CRLF);
+						}
+					}
+					//END OF NEW CODE
 					else
 					{
 						sprintf_s (buffer_out, sizeof(buffer_out), "%s Comando incorrecto%s",ER,CRLF);
@@ -212,6 +249,8 @@ main()
 			{
 				//if an error occurs sending data from the state machine, it will return as error code "-9"
 				return(-9);
+				//provisional solution for sending error, just close the socket created for the current client conection
+				closesocket(nuevosockfd);
 			}
 
 

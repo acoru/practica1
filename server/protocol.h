@@ -8,6 +8,7 @@
 
 #define SD  "QUIT"  // Finalizacion de la conexion de aplicacion
 #define SD2 "EXIT"  // Finalizacion de la conexion de aplicacion y finaliza servidor
+#define SUM "SUM"	// Command to sum 2 4 digit number
 
 // RESPUESTAS A COMANDOS DE APLICACION
 #define OK  "OK"
