@@ -36,6 +36,8 @@ int main(int *argc, char *argv[])
 	int num1 = 0, num2 = 0;
 	int num_error = 0;	//if user(client) insert a bad number(non 4-digit number), it will go 1
 							//and make the user enter in a loop until user(client) insert a 4-digit number
+	//new variables addad for the ECHO functionality
+	char secho[1017] = "";	//char vector(string) for the ECHO functionality
 
 	WORD wVersionRequested;
 	WSADATA wsaData;
@@ -175,8 +177,15 @@ int main(int *argc, char *argv[])
 							sprintf_s(buffer_out, sizeof(buffer_out), "%s %d %d%s",SUM, num1, num2, CRLF);
 						//END OF NEW CODE
 						}
+						//NEW CODE ADDED FOR THE ECHO FUNCTIONALITY
+						else if(strcmp(input, ECHO) == 0)
+						{
+							printf("CLIENTE> Please, insert a message for ECHO: ");
+							gets(secho);
+							sprintf_s(buffer_out, sizeof(buffer_out), "%s %s %s", ECHO, secho, CRLF);
+						}
 						else
-							sprintf_s (buffer_out, sizeof(buffer_out), "%s%s",input,CRLF);
+							sprintf_s (buffer_out, sizeof(buffer_out), "%s%s",input, CRLF);
 						break;
 				 
 				

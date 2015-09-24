@@ -44,6 +44,9 @@ main()
 	int num1 = 0, num2 = 0;
 	int suma = 0;
 	//END OFF NEW VARIABLES
+	//NEW VARIABLES FOR ECHO
+	char cECHO[5] = "";
+	//END OF NEW VARIABLES
 
 	/** INICIALIZACION DE BIBLIOTECA WINSOCK2 **
 	 ** OJO!: SOLO WINDOWS                    **/
@@ -211,7 +214,6 @@ main()
 					//NEW CODE ADDED from here for SUM
 					else if(strcmp(cmd, "SUM ") == 0)
 					{
-						//sscanf_s (buffer_in,"PASS %s\r\n",pas,sizeof(usr));
 						strncpy(cSum, buffer_in, 3);
 						strncpy(fSpace, buffer_in + 3, 1);
 						strncpy(sSpace, buffer_in + 8, 1);
@@ -230,6 +232,12 @@ main()
 						{
 							sprintf_s(buffer_out, sizeof(buffer_out), "%s%s", ER, CRLF);
 						}
+					}
+					//END OF NEW CODE
+					//NEW CODE ADDED FOR ECHO FUNCTIONALITY
+					else if(strcmp(cmd, ECHO) == 0)
+					{
+						sprintf_s(buffer_out, sizeof(buffer_out), "%s %s %s", OK, buffer_in + 5, CRLF);
 					}
 					//END OF NEW CODE
 					else
