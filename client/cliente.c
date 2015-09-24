@@ -34,6 +34,7 @@ int main(int *argc, char *argv[])
 	char option;
 	//new variables added for the SUM functionality
 	int num1 = 0, num2 = 0;
+	char cnum1[5] = "", cnum2[5] = "";
 	int num_error = 0;	//if user(client) insert a bad number(non 4-digit number), it will go 1
 							//and make the user enter in a loop until user(client) insert a 4-digit number
 	//new variables addad for the ECHO functionality
@@ -133,16 +134,16 @@ int main(int *argc, char *argv[])
 						//NEW CODE ADDED from here for SUM functionality
 						else if(strcmp(input, SUM) == 0)
 						{
-							printf("CLIENTE> Please, insert the first number(4 digit or less): ");
+							printf("CLIENTE> Please, insert the first number(4 figures or less): ");
 							num_error = 0;
 							do
 							{
 								if(num_error == 1)
 								{
-									printf("CLIENTE> Please, remember you must insert a 4 digit number: ");
+									printf("CLIENTE> Please, remember you must insert a 4 figures number: ");
 								}
-								scanf("%d", &num1);
-								while(getchar() != '\n');	//used for clearing the input buffer
+								gets(cnum1);
+								sscanf_s(cnum1, "%d", &num1);
 								if(num1 < 0 && num1 > 9999)
 								{
 									num_error = 1;
@@ -152,16 +153,16 @@ int main(int *argc, char *argv[])
 									num_error = 0;
 								}
 							}while(num_error == 1);
-							printf("CLIENTE> Please, insert the second number(4 digit or less): ");
+							printf("CLIENTE> Please, insert the second number(4 figures or less): ");
 							num_error = 0;
 							do
 							{
 								if(num_error == 1)
 								{
-									printf("CLIENTE> Please, remember you must insert a 4 digit number: ");
+									printf("CLIENTE> Please, remember you must insert a 4 figures number: ");
 								}
-								scanf("%d", &num2);
-								while(getchar() != '\n');	//used for clearing the input buffer
+								gets(cnum2);
+								sscanf_s(cnum2, "%d", &num2);
 								if(num2 < 0 && num2 > 9999)
 								{
 									num_error = 1;
@@ -174,7 +175,7 @@ int main(int *argc, char *argv[])
 							//creating the string with the following format: SUM SP NUM1 SP NUM2 CRLF
 							//it will be send to the server side and it will process it for returning
 							//OK SP SUMA CRLF	where SUMA is NUM1+NUM2(5-digit number)
-							sprintf_s(buffer_out, sizeof(buffer_out), "%s %d %d%s",SUM, num1, num2, CRLF);
+							sprintf_s(buffer_out, sizeof(buffer_out), "%s %s %s%s",SUM, cnum1, cnum2, CRLF);
 						//END OF NEW CODE
 						}
 						//NEW CODE ADDED FOR THE ECHO FUNCTIONALITY

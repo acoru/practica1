@@ -221,7 +221,7 @@ main()
 						strncpy(cNum2, buffer_in + 9, 4);
 						strncpy(cCRLF, buffer_in + 13, 2);
 						sscanf_s(cNum1, "%d", &num1);
-						sscanf_s(cNum1, "%d", &num2);
+						sscanf_s(cNum2, "%d", &num2);
 						if(strcmp(cSum, SUM) == 0 && strcmp(fSpace, " ") == 0 && strcmp(sSpace, " ") == 0 && strcmp(cCRLF, CRLF) == 0 && num1 > 0 && num1 < 9999 && num2 > 0 && num2 < 9999)
 						{
 							suma = num1 + num2;
