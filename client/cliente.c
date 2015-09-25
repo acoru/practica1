@@ -34,7 +34,11 @@ int main(int *argc, char *argv[])
 	char option;
 	//new variables added for the SUM functionality
 	int num1 = 0, num2 = 0;
-	char cnum1[5] = "", cnum2[5] = "";
+	int lnum = 4;	//variable that contains the max number of figures of the cnum variables (currently 4 figures numbers)
+	char cnum[5] = "", cnum1[5] = "", cnum2[5] = "";
+	char czeros[4] = "";
+	int strcnum = 0;	//variable used for counting the number of figures of the number inserted by the user
+	int numz = 0;		//vabiable used for the number or 0 that must be added for de cnum1 and cnum2 variables
 	int num_error = 0;	//if user(client) insert a bad number(non 4-digit number), it will go 1
 							//and make the user enter in a loop until user(client) insert a 4-digit number
 	//new variables addad for the ECHO functionality
@@ -151,6 +155,33 @@ int main(int *argc, char *argv[])
 								else
 								{
 									num_error = 0;
+									//NEW CODE ADDED FROM HERE
+									strcnum = strlen(cnum1);
+									if(strcnum < 4)
+									{
+										numz = lnum - strcnum;
+										while(numz > 0)
+										{
+											//cnum1[5] = '0' + cnum1[5];
+											if(numz == lnum - strcnum)	//if the condition is true, it's mean it's the first execution of the loop
+																	//then it needs to write at least one character to czeros before the concatenation
+											{
+												strcpy(czeros, "0");
+											}
+											else if(numz > 0)
+											{
+												strcat(czeros, "0");	//if it not the first execution, then it will concatenate 0 to czeros
+											}
+											numz--;
+											if(numz == 0)
+											{
+												strcpy(cnum, czeros);
+												strcat(cnum, cnum1);
+												strcpy(cnum1, cnum);	//once there's no more zeros remaining to copy to the string czeros, it's time to create the
+																		//cnum string with the 4 figures
+											}
+										}
+									}
 								}
 							}while(num_error == 1);
 							printf("CLIENTE> Please, insert the second number(4 figures or less): ");
@@ -170,6 +201,31 @@ int main(int *argc, char *argv[])
 								else
 								{
 									num_error = 0;
+									//NEW CODE ADDED FROM HERE
+									strcnum = strlen(cnum2);
+									if(strcnum < 4)
+									{
+										numz = lnum - strcnum;
+										while(numz > 0)
+										{
+											if(numz == lnum - strcnum)
+											{
+												strcpy(czeros, "0");
+											}
+											else if(numz > 0)
+											{
+												strcat(czeros, "0");
+											}
+											numz--;
+											if(numz == 0)
+											{
+												strcpy(cnum, czeros);
+												strcat(cnum, cnum2);
+												strcpy(cnum2, cnum);	//once there's no more zeros remaining to copy to the string czeros, it's time to create the
+																		//cnum string with the 4 figures
+											}
+										}
+									}
 								}
 							}while(num_error == 1);
 							//creating the string with the following format: SUM SP NUM1 SP NUM2 CRLF
