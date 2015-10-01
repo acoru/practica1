@@ -103,12 +103,21 @@ main()
 		
 		enviados=send(nuevosockfd,buffer_out,(int)strlen(buffer_out),0);
 		//TODO Comprobar error de envío
-		if(enviados == SOCKET_ERROR)
+		if(enviados <= 0)
 		{
-			//-7 value chosen for send error code
-			return(-7);
-			//provisional solution for error sending welcome message to the client, just close the socket
-			closesocket(nuevosockfd);
+			DWORD error = GetLastError();
+			if(enviados < 0)
+			{
+				//-7 value chosen for send error code
+				return(-7);
+				printf("SERVER> ERROR SENDING DATA %s%s", error, CRLF);
+				//provisional solution for error sending welcome message to the client, just close the socket
+				fin_conexion = 1;
+			}
+			else
+			{
+				fin_conexion = 1;
+			}
 		}
 		//Se reestablece el estado inicial
 		estado = S_USER;
@@ -120,12 +129,22 @@ main()
 			//Se espera un comando del cliente
 			recibidos = recv(nuevosockfd,buffer_in,1023,0);
 			//TODO Comprobar posible error de recepción
-			if(recibidos == SOCKET_ERROR)
+			if(recibidos <= 0)
 			{
-				//-8 value chosen for recv(reception) error code
-				return(-8);
-				//provisional solution for reciving error from client, just close the socket
-				closesocket(nuevosockfd);
+				//if an error occurs, the server will close the socket, if recieves 0 the server will close the socket
+				if(recibidos < 0)
+				{
+					DWORD error = GetLastError();
+					//-8 value chosen for recv(reception) error code
+					return(-8);
+					printf("SERVER> ERROR ON RECEPTION%s%s", error, CRLF);
+					//provisional solution for reciving error from client, just close the socket
+					fin_conexion = 1;
+				}
+				else
+				{
+					fin_conexion = 1;
+				}
 			}
 			
 			buffer_in[recibidos] = 0x00;
@@ -253,12 +272,21 @@ main()
 
 			enviados=send(nuevosockfd,buffer_out,(int)strlen(buffer_out),0);
 			//TODO 
-			if(enviados == SOCKET_ERROR)
+			if(enviados <= 0)
 			{
-				//if an error occurs sending data from the state machine, it will return as error code "-9"
-				return(-9);
-				//provisional solution for sending error, just close the socket created for the current client conection
-				closesocket(nuevosockfd);
+				if(enviados < 0)
+				{
+					DWORD error = GetLastError();
+					//if an error occurs sending data from the state machine, it will return as error code "-9"
+					return(-9);
+					printf("SERVER> ERROR SENDING DATA: %s%s", error, CRLF);
+					//provisional solution for sending error, just close the socket created for the current client conection
+					fin_conexion = 1;
+				}
+				else
+				{
+					fin_conexion = 1;
+				}
 			}
 
 

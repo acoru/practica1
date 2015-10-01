@@ -241,6 +241,12 @@ int main(int *argc, char *argv[])
 							gets(secho);
 							sprintf_s(buffer_out, sizeof(buffer_out), "%s %s %s", ECHO, secho, CRLF);
 						}
+						else if(strcmp(input, SD) == 0)
+						{
+							printf("CLIENTE> CLOSING CONNECTION:%s", CRLF);
+							sprintf_s (buffer_out, sizeof(buffer_out), "%s%s", input, CRLF);
+							estado = S_QUIT;
+						}
 						else
 							sprintf_s (buffer_out, sizeof(buffer_out), "%s%s",input, CRLF);
 						break;
@@ -252,12 +258,21 @@ int main(int *argc, char *argv[])
 					{
 					// Ejercicio: Comprobar el estado de envio
 						enviados=send(sockfd,buffer_out,(int)strlen(buffer_out),0);
-						if(enviados == SOCKET_ERROR)
+						if(enviados <= 0)
 						{
+							DWORD error = GetLastError();
 							//-7 value chosen for send error code
 							return(-7);
-							printf("CLIENTE> FAIL SENDING DATA TO THE SERVER");
-							estado=S_QUIT;
+							if(enviados < 0)
+							{
+								printf("CLIENTE> FAIL SENDING DATA TO THE SERVER: %d%s", error, CRLF);
+								estado=S_QUIT;
+							}
+							else
+							{
+								printf("CLIENTE> END CONEXION WITH THE SERVER%s", CRLF);
+								estado=S_QUIT;
+							}
 						}
 					}
 					//Recibo
@@ -274,8 +289,6 @@ int main(int *argc, char *argv[])
 						{
 							printf("CLIENTE> Conexión con el servidor cerrada\r\n");
 							estado=S_QUIT;
-						
-					
 						}
 					}else
 					{
@@ -284,7 +297,6 @@ int main(int *argc, char *argv[])
 						if(estado!=S_DATA && strncmp(buffer_in,OK,2)==0) 
 							estado++;  
 					}
-
 				}while(estado!=S_QUIT);
 				
 	
