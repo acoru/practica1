@@ -234,11 +234,17 @@ main()
 					else if(strcmp(cmd, "SUM ") == 0)
 					{
 						strncpy(cSum, buffer_in, 3);
+						cSum[3] = 0x00;
 						strncpy(fSpace, buffer_in + 3, 1);
+						fSpace[1] = 0x00;
 						strncpy(sSpace, buffer_in + 8, 1);
+						sSpace[1] = 0x00;
 						strncpy(cNum1, buffer_in + 4, 4);
+						cNum1[4] = 0x00;
 						strncpy(cNum2, buffer_in + 9, 4);
+						cNum2[4] = 0x00;
 						strncpy(cCRLF, buffer_in + 13, 2);
+						cCRLF[2] = 0x00;
 						sscanf_s(cNum1, "%d", &num1);
 						sscanf_s(cNum2, "%d", &num2);
 						if(strcmp(cSum, SUM) == 0 && strcmp(fSpace, " ") == 0 && strcmp(sSpace, " ") == 0 && strcmp(cCRLF, CRLF) == 0 && num1 > 0 && num1 < 9999 && num2 > 0 && num2 < 9999)
